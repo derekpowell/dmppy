@@ -10,7 +10,7 @@ from setuptools import setup
 setup(name='dmppy',
       version='0.1',
       description='A collection of functions I use (dmp)',
-      url='',
+      url='https://github.com/derekpowell/dmppy',
       author='derek powell',
       author_email='derekpowll@gmail.com',
       license='MIT',

@@ -5,12 +5,17 @@ Created on Mon Sep 26 11:10:23 2016
 
 @author: derekpowell
 """
+def filenames(fpath, extension = "*.*"):
+    import glob
 
+    flist = glob.glob(fpath+extension)
+    return flist
+    
 # functions to read in and combine json.gz files
 import json
 import gzip
 
-def gzip_json_load(filename): 
+def gzip_json_load(filename):
     '''loads gzipped json file specified by filename
     filename: string'''
     with gzip.open(filename, "rb") as f:
@@ -23,24 +28,24 @@ def gzip_json_dump(obj, filename):
     obj: json-ready object (e.g., dictionary or list of dictionaries)
     filename: string '''
 
-    jsonObj = json.dumps(obj, indent=4, sort_keys=True)#, ensure_ascii=False).encode('utf8')    
+    jsonObj = json.dumps(obj, indent=4, sort_keys=True)#, ensure_ascii=False).encode('utf8')
     with gzip.open(filename, 'wb') as f:
             f.write(jsonObj)
     f.close()
     return None
-    
-    
+
+
 # easy functions to read and write csv
 import csv
 
 def csv_dump(obj, filename, header = None):
     ''' writes obj (list of lists) to filename
         Optionally writes header as first row
-        
+
         obj: list of lists
         filename: string specifying filename ending in .csv
         header: list for header row'''
-        
+
     with open(filename, "wb") as f:
         writer = csv.writer(f)
         if header != None:
@@ -55,14 +60,14 @@ def csv_load(filename, mode = 'list'):
         mode = 'df': load in style of dataframe, dictionary of lists w/ header as keys
         mode = 'dict': load as dictionary (first col assumed to specify items, header specifies keys)
         mode = 'dict_skipID': load as dict (but do not include ID field in each item)'''
-        
+
     if mode == 'list':
         output=[]
         with open(filename, 'rb') as f:
             reader = csv.reader(f)
             for row in reader:
                 output.append(row)
-                
+
     if mode == 'list_header':
         output=[]
         with open(filename, 'rb') as f:
@@ -70,7 +75,7 @@ def csv_load(filename, mode = 'list'):
             reader.next()
             for row in reader:
                 output.append(row)
-                
+
     if 'dict' in mode:
         with open(filename, 'rb') as f:
             reader = csv.reader(f)
@@ -80,7 +85,7 @@ def csv_load(filename, mode = 'list'):
                 item = {}
                 if mode == 'dict':
                     ind = 0
-                elif mode =='dict_skipID': 
+                elif mode =='dict_skipID':
                     ind = 1
                 for h in header[ind:]:
                     item[h]=row[ind]
@@ -97,7 +102,7 @@ def csv_load(filename, mode = 'list'):
             for row in reader:
                 for i in range(0,len(header)):
                     output[header[i]].append(row[i])
-            
+
     return output
 
 ## This was taken from urschrei/excel_things.py

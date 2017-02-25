@@ -8,7 +8,7 @@ Created on Sat Oct 22 11:21:07 2016
 from setuptools import setup
 
 setup(name='dmppy',
-      version='0.1',
+      version='0.2',
       description='A collection of functions I use (dmp)',
       url='https://github.com/derekpowell/dmppy',
       author='derek powell',

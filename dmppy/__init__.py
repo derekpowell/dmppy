@@ -11,6 +11,45 @@ import read_write
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import cpu_count
+from itertools import partial
+
+def func_kwstar(kwargs,func):
+    """Convert `f({"x":1,"y":2})` to `f(1,2)` call."""
+    return func(**kwargs)
+
+def p_map(func, iterable, use_kwargs = False, n_jobs = -1):
+    """
+    Parallelized map function. More readable than parallel_process.
+
+    func (function): function taking 1 argument to apply to iterable
+    iterable (iterable): list or iterable of objects to be modified by func
+    use_kwargs (bool, default = False): treat iterable items as keyword dicts
+    n_jobs (int, default = -1): number of processes (-1 for # CPUs)
+
+    """
+
+    from multiprocessing import Pool, cpu_count
+
+    if n_jobs == -1:
+        n_jobs = cpu_count()
+
+    pool = Pool(n_jobs)
+
+    if __name__=="__main__":
+
+        if use_kwargs == False:
+            output = pool.map(func, iterable)
+
+        elif use_kwargs == True:
+
+            func_kwargs = partial(func_kwstar, func=func)
+            output = pool.map(func_kwargs, iterable)
+
+        pool.close()
+        pool.join()
+
+        return output
+
 
 def parallel_process(function, array, n_jobs=-1, use_kwargs=False, front_num=3, progressbar = False):
     """
@@ -24,6 +63,7 @@ def parallel_process(function, array, n_jobs=-1, use_kwargs=False, front_num=3, 
                 keyword arguments to function
             front_num (int, default=3): The number of iterations to run serially before kicking off the parallel job.
                 Useful for catching bugs
+            progressbar (bool, default=False): Show tqdm progress bar
         Returns:
             [function(array[0]), function(array[1]), ...]
     """

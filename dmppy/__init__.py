@@ -12,7 +12,7 @@ from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import cpu_count
 
-def parallel_process(function, array, n_jobs=-1, use_kwargs=False, front_num=3, progressbar = True):
+def parallel_process(function, array, n_jobs=-1, use_kwargs=False, front_num=3, progressbar = False):
     """
         A parallel version of the map function with a tqdm progress bar.
 
